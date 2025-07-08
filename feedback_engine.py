@@ -1,10 +1,12 @@
-import openai
-import streamlit as st
+from openai import OpenAI
+import os
+from dotenv import load_dotenv
 
-openai.api_key = st.secrets["OPENAI_API_KEY"]
+load_dotenv()
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def analyze_resume(text):
-    prompt = f'''
+    prompt = f"""
 You are a resume coach for early-career professionals. Here's a resume:
 
 {text}
@@ -13,9 +15,9 @@ Give:
 1. 3 strengths
 2. 3 areas to improve
 3. Overall score (out of 100) with reasoning
-'''
+"""
 
-    response = openai.ChatCompletion.create(
+    response = client.chat.completions.create(
         model="gpt-4",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.4
